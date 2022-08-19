@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 
 const About = ({ isLogin }) => {
-  console.log("isLogin : ", isLogin);
   const path = isLogin === "" ? "/login" : "/todos";
   return (
     <div>
