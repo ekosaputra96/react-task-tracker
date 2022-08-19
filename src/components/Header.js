@@ -7,7 +7,7 @@ const Header = ({ onAddToggle, name, showAdd }) => {
   return (
     <header className="header">
       <h1>{name}</h1>
-      {location.pathname === "/" && (
+      {location.pathname === "/todos" && (
         <Button
           color={showAdd ? "red" : "green"}
           text={showAdd ? "Close" : "Add"}

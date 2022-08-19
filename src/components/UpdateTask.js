@@ -1,11 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import moment from "moment";
 
-const AddTask = ({ onAdd }) => {
-  const [text, setText] = useState("");
-  const [day, setDay] = useState("");
-  const [time, setTime] = useState("");
-  const [reminder, setReminder] = useState(false);
+const UpdateTask = ({ data, onUpdate }) => {
+  const {
+    id: idData,
+    day: dayData,
+    text: textData,
+    reminder: reminderData,
+  } = data;
+  const getDay = moment(dayData).format("YYYY-MM-DD");
+  const getTime = moment(dayData).format("HH:mm");
+  const [id, setId] = useState(idData);
+  const [text, setText] = useState(textData);
+  const [day, setDay] = useState(getDay);
+  const [time, setTime] = useState(getTime);
+  const [reminder, setReminder] = useState(reminderData);
 
+  useEffect(() => {
+    setText(textData);
+    setDay(getDay);
+    setReminder(reminderData);
+    setTime(getTime);
+    setId(idData);
+  }, [textData, getDay, reminderData, idData, getTime]);
   const onSubmit = (e) => {
     e.preventDefault();
     if (!text) {
@@ -18,18 +35,25 @@ const AddTask = ({ onAdd }) => {
     }
     if (!time) {
       alert("Please add time");
-      return;
     }
     const timeFormat = new Date(day + " " + time);
-    onAdd({ text, day: timeFormat.toISOString(), reminder });
+    onUpdate({
+      id,
+      text,
+      day: moment(timeFormat).format("dddd, MMMM Do YYYY"),
+      isoDay: timeFormat.toISOString(),
+      reminder,
+    });
     setText("");
     setReminder(false);
     setDay("");
     setTime("");
+    setId("");
   };
   return (
     <form action="" className="add-form" onSubmit={onSubmit}>
       <div className="form-control">
+        <input type="hidden" name="id" value={id} />
         <label htmlFor="task">Task</label>
         <input
           type="text"
@@ -75,9 +99,9 @@ const AddTask = ({ onAdd }) => {
           }}
         />
       </div>
-      <input type="submit" value="Save Task" className="btn btn-block" />
+      <input type="submit" value="Update Task" className="btn btn-block" />
     </form>
   );
 };
 
-export default AddTask;
+export default UpdateTask;
